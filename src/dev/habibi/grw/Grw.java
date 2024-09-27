@@ -12,6 +12,8 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.YAMLException;
 
+
+
 public class Grw {
 
 	private static final String CAMINHO_ARQUIVO_YAML = System.getProperty("user.home") + "/.config/grw/grw.yaml";
@@ -24,6 +26,7 @@ public class Grw {
 	private static int tempoEspera = TEMPO_PADRAO;
 	private static String diretorioImagens = DIRETORIO_PADRAO_IMAGENS;
 	private static boolean rodando = RODANDO_PADRAO;
+
 
 	public static void main(String[] args) {
 		if (args.length == 0 || args[0].equals("-h")) {
@@ -63,8 +66,7 @@ public class Grw {
 				if (i + 1 < args.length) {
 					String tmp = args[++i];
 
-					// Verifica se o caminho começa com "~" e substitui pelo diretório home do
-					// usuário
+					/* Verifica se o caminho começa com "~" e substitui pelo diretório home do usuário */
 					if (tmp.startsWith("~")) {
 						tmp = System.getProperty("user.home") + tmp.substring(1);
 					}
@@ -107,6 +109,7 @@ public class Grw {
 		}
 	}
 
+
 	private static void iniciar() {
 		// Carregar valores do arquivo YAML antes de iniciar
 		carregarValoresDoArquivoYaml();
@@ -144,11 +147,13 @@ public class Grw {
 		}
 	}
 
+
 	private static void parar() {
 		rodando = false;
 		registrarEmArquivo("rodando", "false");
 		System.out.println("Parando troca de papel de parede.");
 	}
+
 
 	private static void mostrarStatus() {
 		System.out.println("Status atual:");
@@ -157,6 +162,7 @@ public class Grw {
 				.println("\tDiretório de imagens: " + (diretorioImagens.isEmpty() ? "Não definido" : diretorioImagens));
 		System.out.println("\tRodando: " + rodando);
 	}
+
 
 	private static void mostrarAjuda() {
 		System.out.println("Uso do comando grw:");
@@ -167,6 +173,7 @@ public class Grw {
 		System.out.println("\t-s            : Mostra o status atual da configuração.");
 		System.out.println("\t-h            : Mostra este manual de ajuda.");
 	}
+
 
 	private static void trocarPapelDeParede() {
 		File dir = new File(diretorioImagens);
@@ -191,6 +198,7 @@ public class Grw {
 			System.out.println("Erro ao trocar o papel de parede: " + e.getMessage());
 		}
 	}
+
 
 	// Método que grava ou sobrescreve as informações no arquivo YAML
 	private static void registrarEmArquivo(String chave, String valor) {
@@ -242,6 +250,7 @@ public class Grw {
 			System.out.println("Erro ao gravar no arquivo: " + e.getMessage());
 		}
 	}
+
 
 	// Método que carrega os valores mais recentes do arquivo YAML
 	private static void carregarValoresDoArquivoYaml() {
