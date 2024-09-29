@@ -16,7 +16,9 @@ import org.yaml.snakeyaml.error.YAMLException;
 
 public class Grw {
 
-	private static final String CAMINHO_ARQUIVO_YAML = System.getProperty("user.home") + "/.config/grw/grw.yaml";
+	private static final String CAMINHO_ARQ_CONFIG_GRW_YAML = System.getProperty("user.home") + "/.config/grw/grw.yaml";
+	private static final String CAMINHO_DIR_CONFIG_GRW = System.getProperty("user.home") + "/.config/grw";
+	private static final String CAMINHO_DIR_HOME_CONFIG = System.getProperty("user.home") + "/.config";
 
 	private static final int TEMPO_MINIMO = 5;
 	private static final int TEMPO_PADRAO = 80;
@@ -200,10 +202,105 @@ public class Grw {
 	}
 
 
-	// Método que grava ou sobrescreve as informações no arquivo YAML
+	/* Método para checar se o diretório de configuração da 'home' existe (.config). */
+	private static boolean diretorioHomeConfigExiste() {
+		try {
+			File diretorio = new File(CAMINHO_DIR_HOME_CONFIG);
+			return diretorio.exists() && diretorio.isDirectory(); // Verifica se o caminho existe e é um diretório
+		} catch (SecurityException se) {
+			System.out.println("Erro de segurança: Permissão negada para acessar o diretório.");
+		} catch (NullPointerException npe) {
+			System.out.println("Erro: O caminho do diretório fornecido é nulo.");
+		} catch (Exception e) {
+			System.out.println("Ocorreu um erro inesperado: " + e.getMessage());
+		}
+		return false; // Retorna false em caso de exceção
+	}
+
+
+	/* Método para checar se o diretório de configuração do grw existe. */
+	private static boolean diretorioConfigGrwExiste() {
+		try {
+			File diretorio = new File(CAMINHO_DIR_CONFIG_GRW);
+			return diretorio.exists() && diretorio.isDirectory(); // Verifica se o caminho existe e é um diretório
+		} catch (SecurityException se) {
+			System.out.println("Erro de segurança: Permissão negada para acessar o diretório.");
+		} catch (NullPointerException npe) {
+			System.out.println("Erro: O caminho do diretório fornecido é nulo.");
+		} catch (Exception e) {
+			System.out.println("Ocorreu um erro inesperado: " + e.getMessage());
+		}
+		return false; // Retorna false em caso de exceção
+	}
+
+
+	/* Método para checar se o arquivo de configuração do grw existe. */
+	private static boolean arquivoConfigGrwExiste() {
+		try {
+			File arquivo = new File(CAMINHO_ARQ_CONFIG_GRW_YAML);
+			return arquivo.exists() && arquivo.isFile(); // Retorna diretamente o resultado
+		} catch (SecurityException se) {
+			System.out.println("Erro de segurança: Permissão negada para acessar o arquivo.");
+		} catch (NullPointerException npe) {
+			System.out.println("Erro: O caminho do arquivo fornecido é nulo.");
+		} catch (Exception e) {
+			System.out.println("Ocorreu um erro inesperado: " + e.getMessage());
+		}
+		return false; // Retorna false em caso de exceção
+	}
+
+
+	/* Método para criar um arquivo de configuração grw.yaml vazio. */
+	private static void criarArquivoConfigGrw() {
+		
+		//HERE: otimizando o método...
+
+		if (diretorioHomeConfigExiste()) {
+			if (diretorioConfigGrwExiste()) {
+				if (!arquivoConfigGrwExiste()) {
+					File arquivo = new File(CAMINHO_ARQ_CONFIG_GRW_YAML);
+					try {
+						if (!arquivo.createNewFile()) {
+							System.out.println("Falha ao criar arquivo de configuração [grw.yaml].");
+						}
+					} catch (IOException e) {
+						System.out.println(
+								"Erro: Falha ao criar arquivo de configuração [grw.yaml]. Mensagem: " + e.getMessage());
+						return;
+					}
+				}
+
+			} else {
+				try {
+					File diretorioConfigGrw = new File(CAMINHO_DIR_CONFIG_GRW);
+
+					if (!diretorioConfigGrw.createNewFile()) {
+						System.out.println("Falha ao criar diretório de configuração [grw].");
+					}
+				} catch (IOException e) {
+					System.out.println(
+							"Erro: Falha ao criar diretório de configuração [grw]. Mensagem: " + e.getMessage());
+				}
+			}
+		} else {
+			try {
+				File diretorioHomeConfig = new File(CAMINHO_DIR_HOME_CONFIG);
+
+				if (!diretorioHomeConfig.createNewFile()) {
+					System.out.println("Falha ao criar diretório de configuração [grw].");
+				}
+			} catch (IOException e) {
+				System.out.println(
+						"Erro: Falha ao criar diretório de configuração [.config]. Mensagem: " + e.getMessage());
+			}
+		}
+	}
+
+
+	/* Método que grava ou sobrescreve as informações no arquivo YAML */
 	private static void registrarEmArquivo(String chave, String valor) {
 
-		File arquivoYaml = new File(CAMINHO_ARQUIVO_YAML);
+		File arquivoYaml = new File(CAMINHO_ARQ_CONFIG_GRW_YAML);
 		Map<String, Object> dadosYaml;
 
 		// Tentativa de carregar o arquivo existente, se houver
@@ -243,7 +340,7 @@ public class Grw {
 			return;
 		}
 
-		try (FileWriter writer = new FileWriter(CAMINHO_ARQUIVO_YAML)) {
+		try (FileWriter writer = new FileWriter(CAMINHO_ARQ_CONFIG_GRW_YAML)) {
 			// Gravar o conteúdo atualizado no arquivo, sobrescrevendo o anterior
 			yaml.dump(dadosYaml, writer);
 		} catch (IOException e) {
@@ -252,9 +349,9 @@ public class Grw {
 	}
 
 
-	// Método que carrega os valores mais recentes do arquivo YAML
+	/* Método que carrega os valores mais recentes do arquivo YAML. */
 	private static void carregarValoresDoArquivoYaml() {
-		File yamlFile = new File(CAMINHO_ARQUIVO_YAML);
+		File yamlFile = new File(CAMINHO_ARQ_CONFIG_GRW_YAML);
 
 		if (yamlFile.exists()) {
 			try (FileInputStream inputStream = new FileInputStream(yamlFile)) {
