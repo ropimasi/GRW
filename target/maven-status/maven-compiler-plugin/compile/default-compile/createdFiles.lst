@@ -1,2 +1,6 @@
+dev/habibi/grw/WallpaperManager.class
+dev/habibi/grw/Parameters.class
+dev/habibi/grw/Main.class
+dev/habibi/grw/ConfigManager.class
 module-info.class
-dev/habibi/grw/Grw.class
+dev/habibi/grw/CLIHandler.class
