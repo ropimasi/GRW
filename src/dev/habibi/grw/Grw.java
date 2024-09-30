@@ -31,6 +31,10 @@ public class Grw {
 
 
 	public static void main(String[] args) {
+
+		/* Verificar se o diretório de configuração existe de forma válida e criá-lo. */
+		criarArquivoConfigGrw();
+
 		if (args.length == 0 || args[0].equals("-h")) {
 			mostrarAjuda();
 			return;
@@ -88,11 +92,11 @@ public class Grw {
 				break;
 
 			case "-a":
-				iniciar();
+				iniciarLoop();
 				break;
 
 			case "-o":
-				parar();
+				pararLoop();
 				break;
 
 			case "-s":
@@ -112,45 +116,42 @@ public class Grw {
 	}
 
 
-	private static void iniciar() {
-		// Carregar valores do arquivo YAML antes de iniciar
-		carregarValoresDoArquivoYaml();
-
-		if (diretorioImagens.isEmpty()) {
-			System.out.println("Erro: Defina o diretório de imagens com a opção -d.");
-			return;
-		}
-
-		if (tempoEspera < TEMPO_MINIMO) {
-			System.out.println(
-					"Erro: Defina o tempo de espera com a opção -t. O valor deve ser maior ou igual ao tempo mínimo: "
-							+ TEMPO_MINIMO + ".");
-			return;
-		}
-
+	private static void iniciarLoop() {
 		rodando = true; // Define rodando = true para iniciar o loop.
 		registrarEmArquivo("rodando", "true");
 
-		System.out.println(
-				"Trocando papel de parede a cada " + tempoEspera + " segundos, da origem " + diretorioImagens + " .");
 
 		while (rodando) {
+			carregarValoresDoArquivoYaml();
+			
+			System.out.println(
+					"Trocando papel de parede a cada " + tempoEspera + " segundos, da origem " + diretorioImagens + " .");
+
+			if (diretorioImagens.isEmpty()) {
+				System.out.println("Erro: Defina o diretório de imagens com a opção -d.");
+				return;
+			}
+
+			if (tempoEspera < TEMPO_MINIMO) {
+				System.out.println(
+						"Erro: Defina o tempo de espera com a opção -t. O valor deve ser maior ou igual ao tempo mínimo: "
+								+ TEMPO_MINIMO + ".");
+				return;
+			}
+
 			trocarPapelDeParede();
 
 			try {
 				Thread.sleep(tempoEspera * 1000L);
 			} catch (InterruptedException e) {
+				System.out.println("\nDEBUG: falha no temporizador da thread. Mensagem: " + e.getMessage() + "\n");
 				e.printStackTrace();
 			}
-
-			// Carregar valores do arquivo YAML novamente para verificar se manteve os
-			// parâmetros de tempo, diretório, e de rodando.
-			carregarValoresDoArquivoYaml();
 		}
 	}
 
 
-	private static void parar() {
+	private static void pararLoop() {
 		rodando = false;
 		registrarEmArquivo("rodando", "false");
 		System.out.println("Parando troca de papel de parede.");
@@ -167,7 +168,7 @@ public class Grw {
 
 
 	private static void mostrarAjuda() {
-		System.out.println("Uso do comando grw:");
+		System.out.println("\nUso do comando grw:");
 		System.out.println("\t-t <tempo>    : Define o tempo de espera em segundos.");
 		System.out.println("\t-d <diretório>: Define o caminho do diretório contendo imagens.");
 		System.out.println("\t-a            : Inicia a troca aleatória de papel de parede.");
@@ -214,7 +215,7 @@ public class Grw {
 		} catch (Exception e) {
 			System.out.println("Ocorreu um erro inesperado: " + e.getMessage());
 		}
-		return false; // Retorna false em caso de exceção
+		return false;
 	}
 
 
@@ -230,7 +231,7 @@ public class Grw {
 		} catch (Exception e) {
 			System.out.println("Ocorreu um erro inesperado: " + e.getMessage());
 		}
-		return false; // Retorna false em caso de exceção
+		return false;
 	}
 
 
@@ -246,52 +247,46 @@ public class Grw {
 		} catch (Exception e) {
 			System.out.println("Ocorreu um erro inesperado: " + e.getMessage());
 		}
-		return false; // Retorna false em caso de exceção
+		return false;
 	}
 
 
-	/* Método para criar um arquivo de configuração grw.yaml vazio. */
+	/* Método para criar o caminho e o arquivo de configuração grw.yaml vazio. */
 	private static void criarArquivoConfigGrw() {
-		
-		//HERE: otimizando o método...
 
-		if (diretorioHomeConfigExiste()) {
-			if (diretorioConfigGrwExiste()) {
-				if (!arquivoConfigGrwExiste()) {
-					File arquivo = new File(CAMINHO_ARQ_CONFIG_GRW_YAML);
-					try {
-						if (!arquivo.createNewFile()) {
-							System.out.println("Falha ao criar arquivo de configuração [grw.yaml].");
-						}
-					} catch (IOException e) {
-						System.out.println(
-								"Erro: Falha ao criar arquivo de configuração [grw.yaml]. Mensagem: " + e.getMessage());
-						return;
-					}
-				}
+		// HERE: otimizar o método...
 
-			} else {
-				try {
-					File diretorioConfigGrw = new File(CAMINHO_DIR_CONFIG_GRW);
-
-					if (!diretorioConfigGrw.createNewFile()) {
-						System.out.println("Falha ao criar diretório de configuração [grw].");
-					}
-				} catch (IOException e) {
-					System.out.println(
-							"Erro: Falha ao criar diretório de configuração [grw]. Mensagem: " + e.getMessage());
-				}
-			}
-		} else {
+		while (!arquivoConfigGrwExiste()) {
 			try {
-				File diretorioHomeConfig = new File(CAMINHO_DIR_HOME_CONFIG);
-
-				if (!diretorioHomeConfig.createNewFile()) {
-					System.out.println("Falha ao criar diretório de configuração [grw].");
+				System.out.println("\nDEBUG: Verificando diretório [" + CAMINHO_DIR_HOME_CONFIG + "].");
+				if (!diretorioHomeConfigExiste()) {
+					System.out.println("DEBUG: Criando diretório [" + CAMINHO_DIR_HOME_CONFIG + "].");
+					File diretorioHomeConfig = new File(CAMINHO_DIR_HOME_CONFIG);
+					if (!diretorioHomeConfig.mkdirs()) {
+						System.out.println("Falha ao criar diretório de configuração [.gonfig] (2).");
+						break; // Prevenir loop infinito em caso de falha
+					}
 				}
+
+				System.out.println("\nDEBUG: Verificando diretório [" + CAMINHO_DIR_CONFIG_GRW + "].");
+				if (!diretorioConfigGrwExiste()) {
+					System.out.println("DEBUG: Criando diretório [" + CAMINHO_DIR_CONFIG_GRW + "].");
+					File diretorioConfigGrw = new File(CAMINHO_DIR_CONFIG_GRW);
+					if (!diretorioConfigGrw.mkdirs()) {
+						System.out.println("Falha ao criar diretório de configuração [grw] (1).");
+						break; // Prevenir loop infinito em caso de falha
+					}
+				}
+
+				System.out.println("\nDEBUG: Criando arquivo [" + CAMINHO_ARQ_CONFIG_GRW_YAML + "].");
+				File arquivo = new File(CAMINHO_ARQ_CONFIG_GRW_YAML);
+				if (!arquivo.createNewFile()) {
+					System.out.println("Falha ao criar arquivo de configuração [grw.yaml].");
+				}
+
 			} catch (IOException e) {
-				System.out.println(
-						"Erro: Falha ao criar diretório de configuração [.config]. Mensagem: " + e.getMessage());
+				System.out.println("Erro ao criar arquivo ou diretório: " + e.getMessage());
+				break; // Para não continuar tentando indefinidamente
 			}
 		}
 	}
