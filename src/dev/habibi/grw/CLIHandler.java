@@ -6,11 +6,6 @@ import java.io.File;
 
 public class CLIHandler {
 
-	private static int tempoEspera = Parameters.TEMPO_PADRAO;
-	private static String diretorioImagens = Parameters.DIRETORIO_PADRAO_IMAGENS;
-	private static boolean rodando = Parameters.RODANDO_PADRAO;
-
-
 	public static void processarArgumentos(String[] args) {
 		if (args.length == 0 || args[0].equals("-h")) {
 			mostrarAjuda();
@@ -19,20 +14,21 @@ public class CLIHandler {
 
 		ConfigManager.criarArquivoConfigGrw();
 
-		WallpaperManager wallpaperManager = new WallpaperManager(tempoEspera, diretorioImagens, rodando);
+		WallpaperManager wallpaperManager = new WallpaperManager(Parameters.TEMPO_PADRAO,
+				Parameters.DIRETORIO_PADRAO_IMAGENS, Parameters.RODANDO_PADRAO);
 
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
 			case "-t":
 				if (i + 1 < args.length) {
 					try {
-						int tmp = Integer.parseInt(args[++i]);
-						if (tmp < Parameters.TEMPO_MINIMO) {
+						int tempoEspera = Integer.parseInt(args[++i]);
+						if (tempoEspera < Parameters.TEMPO_MINIMO) {
 							System.out.println(
 									"Erro: O tempo de espera deve ser um número inteiro positivo maior-igual que o número mínimo: "
 											+ Parameters.TEMPO_MINIMO + ".");
 						} else {
-							tempoEspera = tmp;
+
 							System.out.println("O tempo de espera foi definido para " + tempoEspera + " segundos.");
 							ConfigManager.registrarConfigEmArquivo("tempoEspera", String.valueOf(tempoEspera));
 						}
@@ -49,18 +45,17 @@ public class CLIHandler {
 
 			case "-d":
 				if (i + 1 < args.length) {
-					String tmp = args[++i];
+					String diretorioImagens = args[++i];
 
 					/* Verifica se o caminho começa com "~" e substitui pelo diretório home do usuário */
-					if (tmp.startsWith("~")) {
-						tmp = System.getProperty("user.home") + tmp.substring(1);
+					if (diretorioImagens.startsWith("~")) {
+						diretorioImagens = System.getProperty("user.home") + diretorioImagens.substring(1);
 					}
 
-					File dir = new File(tmp);
+					File dir = new File(diretorioImagens);
 					if (!dir.exists() || !dir.isDirectory()) {
 						System.out.println("Erro: Diretório de imagens inválido.");
 					} else {
-						diretorioImagens = tmp;
 						System.out.println("O diretório de imagens foi definido [ " + diretorioImagens + " ].");
 						ConfigManager.registrarConfigEmArquivo("diretorioImagens", diretorioImagens);
 					}

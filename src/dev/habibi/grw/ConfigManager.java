@@ -14,31 +14,33 @@ import org.yaml.snakeyaml.error.YAMLException;
 
 public class ConfigManager {
 
-	private static final String CAMINHO_ARQ_CONFIG_GRW_YAML = System.getProperty("user.home") + "/.config/grw/grw.yaml";
-	private static final String CAMINHO_DIR_CONFIG_GRW = System.getProperty("user.home") + "/.config/grw";
-	private static final String CAMINHO_DIR_HOME_CONFIG = System.getProperty("user.home") + "/.config";
+	static int tempoEspera;
+	static String diretorioImagens;
+	static boolean rodando;
 
-	 static int tempoEspera = Parameters.TEMPO_PADRAO;
-	 static String diretorioImagens = Parameters.DIRETORIO_PADRAO_IMAGENS;
-	 static boolean rodando = Parameters.RODANDO_PADRAO;
+
+	private static boolean arquivoConfigGrwExiste() {
+		File arquivo = new File(Parameters.CAMINHO_ARQ_CONFIG_GRW_YAML);
+		return arquivo.exists() && arquivo.isFile();
+	}
 
 
 	public static void criarArquivoConfigGrw() {
 		while (!arquivoConfigGrwExiste()) {
 			try {
-				File diretorioHomeConfig = new File(CAMINHO_DIR_HOME_CONFIG);
+				File diretorioHomeConfig = new File(Parameters.CAMINHO_DIR_HOME_CONFIG);
 				if (!diretorioHomeConfig.exists() && !diretorioHomeConfig.mkdirs()) {
 					System.out.println("Falha ao criar diretório de configuração.");
 					break;
 				}
 
-				File diretorioConfigGrw = new File(CAMINHO_DIR_CONFIG_GRW);
+				File diretorioConfigGrw = new File(Parameters.CAMINHO_DIR_CONFIG_GRW);
 				if (!diretorioConfigGrw.exists() && !diretorioConfigGrw.mkdirs()) {
 					System.out.println("Falha ao criar diretório grw.");
 					break;
 				}
 
-				File arquivo = new File(CAMINHO_ARQ_CONFIG_GRW_YAML);
+				File arquivo = new File(Parameters.CAMINHO_ARQ_CONFIG_GRW_YAML);
 				if (!arquivo.createNewFile()) {
 					System.out.println("Falha ao criar arquivo de configuração [grw.yaml].");
 				}
@@ -52,7 +54,7 @@ public class ConfigManager {
 
 
 	public static void registrarConfigEmArquivo(String chave, String valor) {
-		File arquivoYaml = new File(CAMINHO_ARQ_CONFIG_GRW_YAML);
+		File arquivoYaml = new File(Parameters.CAMINHO_ARQ_CONFIG_GRW_YAML);
 		Map<String, Object> dadosYaml;
 
 		if (arquivoYaml.exists()) {
@@ -76,7 +78,7 @@ public class ConfigManager {
 		options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
 		options.setPrettyFlow(true);
 
-		try (FileWriter writer = new FileWriter(CAMINHO_ARQ_CONFIG_GRW_YAML)) {
+		try (FileWriter writer = new FileWriter(Parameters.CAMINHO_ARQ_CONFIG_GRW_YAML)) {
 			Yaml yaml = new Yaml(options);
 			yaml.dump(dadosYaml, writer);
 		} catch (IOException e) {
@@ -86,7 +88,7 @@ public class ConfigManager {
 
 
 	public static Map<String, Object> lerChavesValoresYaml() {
-		File yamlFile = new File(CAMINHO_ARQ_CONFIG_GRW_YAML);
+		File yamlFile = new File(Parameters.CAMINHO_ARQ_CONFIG_GRW_YAML);
 
 		if (yamlFile.exists()) {
 			try (FileInputStream inputStream = new FileInputStream(yamlFile)) {
@@ -125,9 +127,4 @@ public class ConfigManager {
 		System.out.println("\tRodando: " + rodando);
 	}
 
-
-	private static boolean arquivoConfigGrwExiste() {
-		File arquivo = new File(CAMINHO_ARQ_CONFIG_GRW_YAML);
-		return arquivo.exists() && arquivo.isFile();
-	}
 }
