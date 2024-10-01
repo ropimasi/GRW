@@ -11,40 +11,45 @@ public class WallpaperManager {
 		ConfigManager.tempoEspera = tempoEspera;
 		ConfigManager.diretorioImagens = diretorioImagens;
 		ConfigManager.rodando = rodando;
+		ConfigManager.registrarConfigEmArquivo("tempoEspera", Integer.toString(tempoEspera));
+		ConfigManager.registrarConfigEmArquivo("diretorioImagens", diretorioImagens);
+		ConfigManager.registrarConfigEmArquivo("rodando", Boolean.toString(rodando));
 	}
 
 
 	public void iniciarLoop() {
 		ConfigManager.rodando = true;
 		ConfigManager.registrarConfigEmArquivo("rodando", "true");
+		ConfigManager.carregarConfiguracoesDoArquivo();
 
 		while (ConfigManager.rodando) {
-			ConfigManager.carregarConfiguracoesDoArquivo();
-
-			System.out.println("Trocando papel de parede a cada " + ConfigManager.tempoEspera + " segundos, da origem "
-					+ ConfigManager.diretorioImagens);
-
-			trocarPapelDeParede();
+			System.out.println("Trocando papel de parede a cada " + ConfigManager.tempoEspera + " segundos, da origem ["
+					+ ConfigManager.diretorioImagens + "].");
+			this.trocarPapelDeParede();
 
 			try {
 				Thread.sleep(ConfigManager.tempoEspera * 1000L);
 			} catch (InterruptedException e) {
 				System.out.println("Erro no temporizador da thread: " + e.getMessage());
 			}
+			
+			ConfigManager.carregarConfiguracoesDoArquivo();
 		}
+		System.out.println("Troca de papel de parede parada!");
 	}
 
 
 	public void pararLoop() {
 		ConfigManager.rodando = false;
 		ConfigManager.registrarConfigEmArquivo("rodando", "false");
-		System.out.println("Parando troca de papel de parede.");
+		System.out.println("Parando troca de papel de parede...");
 	}
 
 
 	private void trocarPapelDeParede() {
 		File dir = new File(ConfigManager.diretorioImagens);
-		File[] imagens = dir.listFiles((d, name) -> name.endsWith(".jpg") || name.endsWith(".png"));
+		File[] imagens = dir.listFiles((d, name) -> name.endsWith(".jpg") || name.endsWith(".jpeg")
+				|| name.endsWith(".gif") || name.endsWith(".png") || name.endsWith(".webp"));
 
 		if (imagens == null || imagens.length == 0) {
 			System.out.println("Nenhuma imagem encontrada no diretório.");
@@ -56,10 +61,13 @@ public class WallpaperManager {
 		String caminhoImagem = imagemAleatoria.getAbsolutePath();
 
 		try {
-			String comando = "gsettings set org.gnome.desktop.background picture-uri-dark file://" + caminhoImagem;
-			Runtime.getRuntime().exec(comando);
+			String comandoLight = "gsettings set org.gnome.desktop.background picture-uri file://" + caminhoImagem;
+			String comandoDark = "gsettings set org.gnome.desktop.background picture-uri-dark file://" + caminhoImagem;
+			Runtime.getRuntime().exec(comandoLight);
+			Runtime.getRuntime().exec(comandoDark);
+
 			System.out.println("Papel de parede alterado para: " + caminhoImagem);
-			ConfigManager.registrarConfigEmArquivo("papelDeParede", caminhoImagem);
+			//ConfigManager.registrarConfigEmArquivo("papelDeParede", caminhoImagem);
 		} catch (Exception e) {
 			System.out.println("Erro ao trocar o papel de parede: " + e.getMessage());
 		}

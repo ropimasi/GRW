@@ -8,11 +8,11 @@ public class CLIHandler {
 
 	public static void processarArgumentos(String[] args) {
 		if (args.length == 0 || args[0].equals("-h")) {
-			mostrarAjuda();
+			CLIHandler.mostrarAjuda();
 			return;
 		}
 
-		ConfigManager.criarArquivoConfigGrw();
+		ConfigManager.criarArquivoConfigGrwSeNaoExiste();
 
 		WallpaperManager wallpaperManager = new WallpaperManager(Parameters.TEMPO_PADRAO,
 				Parameters.DIRETORIO_PADRAO_IMAGENS, Parameters.RODANDO_PADRAO);
