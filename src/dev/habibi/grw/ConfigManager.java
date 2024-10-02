@@ -121,14 +121,4 @@ public class ConfigManager {
 		}
 	}
 
-
-	public static void mostrarStatus() {
-		carregarConfiguracoesDoArquivo();
-
-		System.out.println("Status atual:");
-		System.out.println("\tTempo de espera: " + tempoEspera + " segundos");
-		System.out.println("\tDiretório de imagens: " + diretorioImagens);
-		System.out.println("\tRodando: " + rodando);
-	}
-
 }

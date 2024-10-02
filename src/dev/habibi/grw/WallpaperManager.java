@@ -7,17 +7,16 @@ import java.util.Random;
 
 public class WallpaperManager {
 
-	public WallpaperManager(int tempoEspera, String diretorioImagens, boolean rodando) {
-		ConfigManager.tempoEspera = tempoEspera;
-		ConfigManager.diretorioImagens = diretorioImagens;
-		ConfigManager.rodando = rodando;
-		ConfigManager.registrarConfigEmArquivo("tempoEspera", Integer.toString(tempoEspera));
-		ConfigManager.registrarConfigEmArquivo("diretorioImagens", diretorioImagens);
-		ConfigManager.registrarConfigEmArquivo("rodando", Boolean.toString(rodando));
-	}
+	/*	public WallpaperManager(int tempoEspera, String diretorioImagens, boolean rodando) {
+			ConfigManager.tempoEspera = tempoEspera;
+			ConfigManager.diretorioImagens = diretorioImagens;
+			ConfigManager.rodando = rodando;
+			ConfigManager.registrarConfigEmArquivo("tempoEspera", Integer.toString(tempoEspera));
+			ConfigManager.registrarConfigEmArquivo("diretorioImagens", diretorioImagens);
+			ConfigManager.registrarConfigEmArquivo("rodando", Boolean.toString(rodando));
+		}*/
 
-
-	public void iniciarLoop() {
+	static void iniciarLoop() {
 		ConfigManager.rodando = true;
 		ConfigManager.registrarConfigEmArquivo("rodando", "true");
 		ConfigManager.carregarConfiguracoesDoArquivo();
@@ -25,28 +24,28 @@ public class WallpaperManager {
 		while (ConfigManager.rodando) {
 			System.out.println("Trocando papel de parede a cada " + ConfigManager.tempoEspera + " segundos, da origem ["
 					+ ConfigManager.diretorioImagens + "].");
-			this.trocarPapelDeParede();
+			trocarPapelDeParede();
 
 			try {
 				Thread.sleep(ConfigManager.tempoEspera * 1000L);
 			} catch (InterruptedException e) {
 				System.out.println("Erro no temporizador da thread: " + e.getMessage());
 			}
-			
+
 			ConfigManager.carregarConfiguracoesDoArquivo();
 		}
 		System.out.println("Troca de papel de parede parada!");
 	}
 
 
-	public void pararLoop() {
+	static void pararLoop() {
 		ConfigManager.rodando = false;
 		ConfigManager.registrarConfigEmArquivo("rodando", "false");
 		System.out.println("Parando troca de papel de parede...");
 	}
 
 
-	private void trocarPapelDeParede() {
+	static void trocarPapelDeParede() {
 		File dir = new File(ConfigManager.diretorioImagens);
 		File[] imagens = dir.listFiles((d, name) -> name.endsWith(".jpg") || name.endsWith(".jpeg")
 				|| name.endsWith(".gif") || name.endsWith(".png") || name.endsWith(".webp"));

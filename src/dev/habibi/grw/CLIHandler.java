@@ -8,14 +8,14 @@ public class CLIHandler {
 
 	public static void processarArgumentos(String[] args) {
 		if (args.length == 0 || args[0].equals("-h")) {
-			CLIHandler.mostrarAjuda();
+			DialogUI.mostrarAjuda();
 			return;
 		}
 
 		ConfigManager.criarArquivoConfigGrwSeNaoExiste();
 
-		WallpaperManager wallpaperManager = new WallpaperManager(Parameters.TEMPO_PADRAO,
-				Parameters.DIRETORIO_PADRAO_IMAGENS, Parameters.RODANDO_PADRAO);
+		/*WallpaperManager wallpaperManager = new WallpaperManager(Parameters.TEMPO_PADRAO,
+				Parameters.DIRETORIO_PADRAO_IMAGENS, Parameters.RODANDO_PADRAO);*/
 
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
@@ -66,34 +66,28 @@ public class CLIHandler {
 				break;
 
 			case "-a":
-				wallpaperManager.iniciarLoop();
+				WallpaperManager.iniciarLoop();
 				break;
 
 			case "-o":
-				wallpaperManager.pararLoop();
+				WallpaperManager.pararLoop();
 				break;
 
 			case "-s":
-				ConfigManager.mostrarStatus();
+				DialogUI.mostrarStatus();
+				break;
+
+			case "-v":
+				DialogUI.mostrarVersao();
 				break;
 
 			default:
 				System.out.println("Opção desconhecida: " + args[i]);
-				mostrarAjuda();
+				DialogUI.mostrarAjuda();
 				break;
 			}
 		}
 	}
 
 
-	private static void mostrarAjuda() {
-		System.out.println("Uso: grw [opções]");
-		System.out.println("Opções:");
-		System.out.println("\t-t <tempo> \t\t Definir o intervalo de tempo entre trocas de papel de parede.");
-		System.out.println("\t-d <diretório> \t\t Definir o diretório de imagens.");
-		System.out.println("\t-a \t\t\t Iniciar a troca automática de papel de parede.");
-		System.out.println("\t-o \t\t\t Parar a troca automática de papel de parede.");
-		System.out.println("\t-s \t\t\t Mostrar o status atual.");
-		System.out.println("\t-h \t\t\t Mostrar esta ajuda.");
-	}
 }
