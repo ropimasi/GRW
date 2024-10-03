@@ -56,3 +56,4 @@ A small software aims to change the wallpaper image of Gnome Desktop randomly. D
 &nbsp;  
 &nbsp;  
 
+Teste.
