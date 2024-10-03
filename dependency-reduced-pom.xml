@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>dev.habibi</groupId>
   <artifactId>grw</artifactId>
-  <version>0.0.5-snapshot</version>
+  <version>0.1.0-snapshot</version>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <resources>
