@@ -56,6 +56,7 @@ A small software aims to change the wallpaper image of Gnome Desktop randomly. D
 &nbsp;  
 
 ### Features in target release version (1.0.0)
+  + All features above, more...
   + Handle 'n' different image directories along their aliases;
 
 &nbsp;  
