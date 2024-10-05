@@ -14,41 +14,42 @@ import org.yaml.snakeyaml.error.YAMLException;
 
 public class ConfigManager {
 
-	static int tempoEspera;
-	static String diretorioImagens;
-	static boolean rodando;
+	static int waitingTime;
+	static String imagesDirectory;
+	static boolean running;
 
 
-	private static boolean arquivoConfigGrwExiste() {
-		File arquivo = new File(Parameters.CAMIN_PAD_ARQ_CONFIG_GRW_YAML);
-		return arquivo.exists() && arquivo.isFile();
+	private static boolean configFileExists() {
+		File configFile = new File(Parameters.PATH_CONFIG_GRW_FILE_YAML_DEFAULT);
+		return configFile.exists() && configFile.isFile();
 	}
 
 
-	/* Se não existe o arquivo grw.yaml no diretório padrão, criará o caminho e o arquivo. */
-	public static boolean criarDirArqConfigGrwSeNaoExiste() {
-		while (!arquivoConfigGrwExiste()) {
+	/* It will create the path and file if the grw.yaml file does not exist in the default directory. */
+	static boolean createDirFileConfigGrwIfNotExists() {
+		while (!configFileExists()) {
 			try {
-				File diretorioHomeConfig = new File(Parameters.CAMIN_PAD_DIR_HOME_CONFIG);
+				File diretorioHomeConfig = new File(Parameters.PATH_HOME_CONFIG_DEFAULT);
 				if (!diretorioHomeConfig.exists() && !diretorioHomeConfig.mkdirs()) {
-					System.out.println("Falha ao criar diretório de configuração.");
+					System.out.println("Warning: Failed to create configuration directory.");
 					return false;
 				}
 
-				File diretorioConfigGrw = new File(Parameters.CAMIN_PAD_DIR_CONFIG_GRW);
+				File diretorioConfigGrw = new File(Parameters.PATH_CONFIG_GRW_DEFAULT);
 				if (!diretorioConfigGrw.exists() && !diretorioConfigGrw.mkdirs()) {
-					System.out.println("Falha ao criar diretório grw.");
+					System.out.println("Warning: Failed to create 'grw' directory.");
 					return false;
 				}
 
-				File arquivo = new File(Parameters.CAMIN_PAD_ARQ_CONFIG_GRW_YAML);
+				File arquivo = new File(Parameters.PATH_CONFIG_GRW_FILE_YAML_DEFAULT);
 				if (!arquivo.createNewFile()) {
-					System.out.println("Falha ao criar arquivo de configuração [grw.yaml].");
+					System.out.println("Warning: Failed to create configuration file [grw.yaml].");
 					return false;
 				}
 
 			} catch (IOException e) {
-				System.out.println("Erro ao criar arquivo ou diretório: " + e.getMessage());
+				System.out
+						.println("Error: Exception creating file or directory. [[ Message: " + e.getMessage() + " ]]");
 				return false;
 			}
 		}
@@ -56,80 +57,115 @@ public class ConfigManager {
 	}
 
 
-	public static void registrarConfigEmArquivo(String chave, String valor) {
-		File arquivoYaml = new File(Parameters.CAMIN_PAD_ARQ_CONFIG_GRW_YAML);
-		Map<String, Object> dadosYaml;
+	static void writeConfigToFile(String key, String value) {
+		File yamlFile = new File(Parameters.PATH_CONFIG_GRW_FILE_YAML_DEFAULT);
+		Map<String, Object> yamlData;
 
-		if (arquivoYaml.exists()) {
-			try (FileInputStream inputStream = new FileInputStream(arquivoYaml)) {
+		if (yamlFile.exists()) {
+			try (FileInputStream inputStream = new FileInputStream(yamlFile)) {
 				Yaml yaml = new Yaml();
-				dadosYaml = yaml.load(inputStream);
-				if (dadosYaml == null) {
-					dadosYaml = new HashMap<>();
+				yamlData = yaml.load(inputStream);
+				if (yamlData == null) {
+					yamlData = new HashMap<>();
 				}
 			} catch (YAMLException | IOException e) {
-				System.out.println("Erro ao processar o arquivo YAML: " + e.getMessage());
-				dadosYaml = new HashMap<>();
+				System.out.println("Error: Exception processing configuration file [grw.yaml]. [[ Message: "
+						+ e.getMessage() + " ]]");
+				yamlData = new HashMap<>();
 			}
 		} else {
-			dadosYaml = new HashMap<>();
+			yamlData = new HashMap<>();
 		}
 
-		dadosYaml.put(chave, valor);
+		yamlData.put(key, value);
 
 		DumperOptions options = new DumperOptions();
 		options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
 		options.setPrettyFlow(true);
 
-		try (FileWriter writer = new FileWriter(Parameters.CAMIN_PAD_ARQ_CONFIG_GRW_YAML)) {
+		try (FileWriter writer = new FileWriter(Parameters.PATH_CONFIG_GRW_FILE_YAML_DEFAULT)) {
 			Yaml yaml = new Yaml(options);
-			yaml.dump(dadosYaml, writer);
+			yaml.dump(yamlData, writer);
 		} catch (IOException e) {
-			System.out.println("Erro ao gravar no arquivo: " + e.getMessage());
+			System.out.println(
+					"Error: Exception writing configuration file [grw.yaml]. [[ Message: " + e.getMessage() + " ]]");
 		}
 	}
 
 
-	public static Map<String, Object> lerChavesValoresYamlDoArquivo() {
-		File yamlFile = new File(Parameters.CAMIN_PAD_ARQ_CONFIG_GRW_YAML);
+	static void setImageDiretory(String imagesDirectory) {
+
+		imagesDirectory = Utility.convertTildeToPath(imagesDirectory);
+
+		File dir = new File(imagesDirectory);
+		if (!dir.exists() || !dir.isDirectory()) {
+			System.out.println("Error: Invalid images directory.");
+		} else {
+			ConfigManager.writeConfigToFile("imagesDirectory", imagesDirectory);
+			System.out.println("Info: The images directory has been set [ " + imagesDirectory + " ].");
+		}
+	}
+
+
+	static void setWaitingTime(String time) {
+		try {
+			int waitingTime = Integer.parseInt(time);
+			if (waitingTime < Parameters.TIME_MIN) {
+				System.out.println(
+						"Error: Waiting time must be a positive integer greater than or equal to the minimum number ["
+								+ Parameters.TIME_MIN + "].");
+			} else {
+				ConfigManager.writeConfigToFile("waitingTime", String.valueOf(waitingTime));
+				System.out.println("Info: The waiting time has been set [" + waitingTime + "seg].");
+			}
+		} catch (NumberFormatException e) {
+			System.out.println(
+					"Error: Exception: Invalid input. Could not convert [" + time + "] to a positive integer.");
+		}
+	}
+
+
+	static void setConfigFromDefaultValues() {
+		ConfigManager.waitingTime = Parameters.TIME_DEFAULT;
+		writeConfigToFile("waitingTime", String.valueOf(ConfigManager.waitingTime));
+		ConfigManager.imagesDirectory = Parameters.IMAGES_DIR_DEFAULT;
+		writeConfigToFile("imagesDirectory", ConfigManager.imagesDirectory);
+		System.out.println("Info: Waiting time and images directory settings have been set to default value.");
+		DialogUI.showStatus();
+	}
+
+
+	static void readConfigurationFormFile() {
+		Map<String, Object> configYaml = ConfigManager.readKeyValueYamlFromFile();
+
+		if (configYaml.containsKey("waitingTime")) {
+			ConfigManager.waitingTime = Integer.parseInt(configYaml.get("waitingTime").toString()); //FIXME: WAITINGTIME IS GETTING 80, INSTED OF 40.
+		}
+		if (configYaml.containsKey("imagesDirectory")) {
+			ConfigManager.imagesDirectory = configYaml.get("imagesDirectory").toString();
+		}
+		if (configYaml.containsKey("running")) {
+			ConfigManager.running = configYaml.get("running").toString().equals("true");
+		}
+	}
+
+
+	static Map<String, Object> readKeyValueYamlFromFile() {
+		File yamlFile = new File(Parameters.PATH_CONFIG_GRW_FILE_YAML_DEFAULT);
 
 		if (yamlFile.exists()) {
 			try (FileInputStream inputStream = new FileInputStream(yamlFile)) {
 				Yaml yaml = new Yaml();
 				return yaml.load(inputStream);
 			} catch (IOException e) {
-				System.out.println("Erro ao ler os chaves-valores do arquivo YAML: " + e.getMessage());
+				System.out.println(
+						"Error: Exception reading key-value pairs from configuration file [grw.yaml]. [[ Message: "
+								+ e.getMessage() + " ]]");
 			}
 		} else {
-			System.out.println("Arquivo YAML não encontrado.");
+			System.out.println("Warning: Configuration file [grw.yaml] not found.");
 		}
 		return new HashMap<>();
-	}
-
-
-	public static void carregarConfiguracoesDoArquivo() {
-		Map<String, Object> configYaml = ConfigManager.lerChavesValoresYamlDoArquivo();
-
-		if (configYaml.containsKey("tempoEspera")) {
-			ConfigManager.tempoEspera = Integer.parseInt(configYaml.get("tempoEspera").toString());
-		}
-		if (configYaml.containsKey("diretorioImagens")) {
-			ConfigManager.diretorioImagens = configYaml.get("diretorioImagens").toString();
-		}
-		if (configYaml.containsKey("rodando")) {
-			ConfigManager.rodando = configYaml.get("rodando").toString().equals("true");
-		}
-	}
-
-
-	public static void definirConfiguracoesValoresPadroes() {
-		ConfigManager.tempoEspera = Parameters.TEMPO_PADRAO;
-		registrarConfigEmArquivo("tempoEspera", String.valueOf(ConfigManager.tempoEspera));
-		ConfigManager.diretorioImagens = Parameters.DIRETORIO_PADRAO_IMAGENS;
-		registrarConfigEmArquivo("diretorioImagens", ConfigManager.diretorioImagens);
-		System.out.println("Configurações de tempo e diretório definidas com valor padrão.");
-		
-		DialogUI.mostrarStatus();
 	}
 
 }

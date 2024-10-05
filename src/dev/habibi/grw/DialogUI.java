@@ -8,39 +8,39 @@ public class DialogUI {
 	static final String ERR_ = "0";
 	
 
-	static void mostrarVersao() {
+	static void showVersion() {
 		System.out.println("\n");
 		System.out.println(
-				Parameters.PROJECT_NAME + " - " + Parameters.PROJECT_ALIAS + " versão " + Parameters.PROJECT_VERSION);
+				Parameters.PROJECT_NAME + " - " + Parameters.PROJECT_ALIAS + " version " + Parameters.PROJECT_VERSION);
 		System.out.println("\n");
 	}
 
 
-	static void mostrarAjuda() {
+	static void showHelp() {
 		System.out.println("\n");
 		System.out.println(Parameters.PROJECT_NAME + " - " + Parameters.PROJECT_ALIAS);
-		System.out.println("Syntaxe: grw [opções] [argumento]");
-		System.out.println("Uso: grw [-h | -s | -t <tempo-segundos> | -d <caminho-diretório> | -a | -o]");
-		System.out.println("Opções:");
-		System.out.println("\t-h \t\t\t Mostrar esta ajuda.");
-		System.out.println("\t-v \t\t\t Mostrar versão do grw.");
-		System.out.println("\t-s \t\t\t Mostrar o status atual.");
-		System.out.println("\t-t <tempo> \t\t Definir o intervalo de tempo entre trocas de papel de parede.");
-		System.out.println("\t-d <diretório> \t\t Definir o diretório de imagens.");
-		System.out.println("\t-a \t\t\t Iniciar a troca automática de papel de parede.");
-		System.out.println("\t-o \t\t\t Parar a troca automática de papel de parede.");
-		System.out.println("\t-f \t\t\t Define configurações de tempo e diretório com valores padrões do programa.");
+		System.out.println("Syntaxe: grw [option] [argument]");
+		System.out.println("Usage: grw [-h | -s | -t <time-seconds> | -d <path-directory> | -a | -o | -f]");
+		System.out.println("Options:");
+		System.out.println("\t-h \t\t\t Shows this help text.");
+		System.out.println("\t-v \t\t\t Shows version of grw.");
+		System.out.println("\t-s \t\t\t Shows current status of configuration.");
+		System.out.println("\t-t <time> \t\t Sets the waiting time between wallpaper changes.");
+		System.out.println("\t-d <directory> \t\t Sets the images directory.");
+		System.out.println("\t-a \t\t\t Starts automatic changing of wallpaper.");
+		System.out.println("\t-o \t\t\t Stops automatic changing of wallpaper.");
+		System.out.println("\t-f \t\t\t Sets waiting time and images directory configurationcom to default value.");
 		System.out.println("\n");
 	}
 
-	public static void mostrarStatus() {
-		ConfigManager.carregarConfiguracoesDoArquivo();
+	public static void showStatus() {
+		ConfigManager.readConfigurationFormFile();
 
 		System.out.println("\n");
-		System.out.println("Status atual:");
-		System.out.println("\tTempo de espera: " + ConfigManager.tempoEspera + " segundos");
-		System.out.println("\tDiretório de imagens: " + ConfigManager.diretorioImagens);
-		System.out.println("\tRodando: " + ConfigManager.rodando);
+		System.out.println("Current status:");
+		System.out.println("\tWaiting time: " + ConfigManager.waitingTime + " seconds,");
+		System.out.println("\tImagens directory: " + ConfigManager.imagesDirectory + ",");
+		System.out.println("\tRunning: " + ConfigManager.running + ".");
 		System.out.println("\n");
 	}
 }
