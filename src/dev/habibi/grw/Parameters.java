@@ -12,9 +12,9 @@ public class Parameters {
 	static final String CAMIN_PAD_ARQ_CONFIG_GRW_YAML = CAMIN_PAD_DIR_HOME_CONFIG + "/grw.yaml";
 
 	static final String PROJECT_VERSION_MAJOR = "0";
-	static final String PROJECT_VERSION_MINOR = "1";
+	static final String PROJECT_VERSION_MINOR = "6";
 	static final String PROJECT_VERSION_PATCH = "0";
-	static final String PROJECT_VERSION_DESCR = "snap";
+	static final String PROJECT_VERSION_DESCR = "snapshot";
 	static final String PROJECT_VERSION = PROJECT_VERSION_MAJOR + "." + PROJECT_VERSION_MINOR + "."
 			+ PROJECT_VERSION_PATCH + "-" + PROJECT_VERSION_DESCR;
 	static final String PROJECT_NAME = "Gnome Randomic Wallpaper";

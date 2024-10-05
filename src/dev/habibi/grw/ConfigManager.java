@@ -25,8 +25,8 @@ public class ConfigManager {
 	}
 
 
-	/* Se não existe arquivo grw.yaml no diretório padrão, criará os mesmos. */
-	public static boolean criarArquivoConfigGrwSeNaoExiste() {
+	/* Se não existe o arquivo grw.yaml no diretório padrão, criará o caminho e o arquivo. */
+	public static boolean criarDirArqConfigGrwSeNaoExiste() {
 		while (!arquivoConfigGrwExiste()) {
 			try {
 				File diretorioHomeConfig = new File(Parameters.CAMIN_PAD_DIR_HOME_CONFIG);
@@ -119,6 +119,17 @@ public class ConfigManager {
 		if (configYaml.containsKey("rodando")) {
 			ConfigManager.rodando = configYaml.get("rodando").toString().equals("true");
 		}
+	}
+
+
+	public static void definirConfiguracoesValoresPadroes() {
+		ConfigManager.tempoEspera = Parameters.TEMPO_PADRAO;
+		registrarConfigEmArquivo("tempoEspera", String.valueOf(ConfigManager.tempoEspera));
+		ConfigManager.diretorioImagens = Parameters.DIRETORIO_PADRAO_IMAGENS;
+		registrarConfigEmArquivo("diretorioImagens", ConfigManager.diretorioImagens);
+		System.out.println("Configurações de tempo e diretório definidas com valor padrão.");
+		
+		DialogUI.mostrarStatus();
 	}
 
 }

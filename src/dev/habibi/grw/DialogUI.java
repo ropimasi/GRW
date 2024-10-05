@@ -29,6 +29,7 @@ public class DialogUI {
 		System.out.println("\t-d <diretório> \t\t Definir o diretório de imagens.");
 		System.out.println("\t-a \t\t\t Iniciar a troca automática de papel de parede.");
 		System.out.println("\t-o \t\t\t Parar a troca automática de papel de parede.");
+		System.out.println("\t-f \t\t\t Define configurações de tempo e diretório com valores padrões do programa.");
 		System.out.println("\n");
 	}
 

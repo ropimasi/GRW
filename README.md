@@ -35,7 +35,7 @@ A small software aims to change the wallpaper image of Gnome Desktop randomly. D
 &nbsp;  
 &nbsp;  
 
-### Features in current version (0.1.0)
+### Features in current version (0.6.0)
   + Prints syntax and brief option help to the screen;
   + Prints the current version of _*grw*_ to the screen;
   + Prints the current status of the configuration set to the screen;
@@ -43,12 +43,12 @@ A small software aims to change the wallpaper image of Gnome Desktop randomly. D
   + Sets a directory as the image directory;
   + Starts the infinite loop for image changing;
   + Stops the infinite loop for image changing;  
+  + Sets the default value for all configurations;
 
 &nbsp;  
 &nbsp;  
 
 ### Features in target release version (1.0.0)
-  + Sets the default value for all configurations;
   + Sets all configurations as default value;
   + Handle 'n' different image directories along their aliases;
 
