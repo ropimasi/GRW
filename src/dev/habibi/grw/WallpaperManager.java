@@ -40,7 +40,7 @@ public class WallpaperManager {
 	static void changeWallpaper() {
 		File dir = new File(ConfigManager.imagesDirectory);
 		File[] imagens = dir.listFiles((d, name) -> name.endsWith(".jpg") || name.endsWith(".jpeg")
-				|| name.endsWith(".gif") || name.endsWith(".png") || name.endsWith(".webp"));
+				|| name.endsWith(".gif") || name.endsWith(".png") || name.endsWith(".webp") || name.endsWith(".avif"));
 
 		if (imagens == null || imagens.length == 0) {
 			System.out.println("Warning: No images found in directory [" + ConfigManager.imagesDirectory + "].");
