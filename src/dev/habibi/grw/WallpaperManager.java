@@ -9,31 +9,30 @@ public class WallpaperManager {
 
 	static void startLoop() {
 		ConfigManager.running = true;
-		ConfigManager.writeConfigToFile("running", "true");
+		ConfigManager.writeConfigToFile("running", String.valueOf(ConfigManager.running));
 		ConfigManager.readConfigurationFormFile();
 
-		System.out.println("Info: Wallpaper change every [" + ConfigManager.waitingTime + "] seconds from source ["
-				+ ConfigManager.imagesDirectory + "] was started.");
+		System.out.println("\nInfo: Wallpaper change every [" + ConfigManager.waitingTime + "] seconds from source ["
+				+ ConfigManager.imagesDirectory + "] was started.\n");
 
 		while (ConfigManager.running) {
 			changeWallpaper();
-
 			try {
 				Thread.sleep(ConfigManager.waitingTime * 1000L);
 			} catch (InterruptedException e) {
 				System.out.println("Error: Exception on timer thread. [[ Message: " + e.getMessage() + " ]]");
 			}
-
 			ConfigManager.readConfigurationFormFile();
 		}
-		System.out.println("Info: Wallpaper change has been stoped!");
+		
+		System.out.println("\nInfo: Wallpaper change has been stoped!\n");
 	}
 
 
 	static void stopLoop() {
 		ConfigManager.running = false;
 		ConfigManager.writeConfigToFile("running", "false");
-		System.out.println("Info: Stopping wallpaper change...");
+		System.out.println("\nInfo: Stopping wallpaper change...\n");
 	}
 
 
@@ -43,7 +42,7 @@ public class WallpaperManager {
 				|| name.endsWith(".gif") || name.endsWith(".png") || name.endsWith(".webp") || name.endsWith(".avif"));
 
 		if (imagens == null || imagens.length == 0) {
-			System.out.println("Warning: No images found in directory [" + ConfigManager.imagesDirectory + "].");
+			System.out.println("\nWarning: No images found in directory [" + ConfigManager.imagesDirectory + "].\n");
 			return;
 		}
 
@@ -52,12 +51,12 @@ public class WallpaperManager {
 		String imagePath = oneRandomImage.getAbsolutePath();
 
 		try {
-			String lightGnomeCommand = "gsettings set org.gnome.desktop.background picture-uri file://" + imagePath;
-			String darkGnomeCommand = "gsettings set org.gnome.desktop.background picture-uri-dark file://" + imagePath;
-			Runtime.getRuntime().exec(lightGnomeCommand);
+			String darkGnomeCommand = "gsettings set org.gnome.desktop.background picture-uri-dark 'file://" + imagePath + "'";
+			String lightGnomeCommand = "gsettings set org.gnome.desktop.background picture-uri 'file://" + imagePath + "'";
 			Runtime.getRuntime().exec(darkGnomeCommand);
+			Runtime.getRuntime().exec(lightGnomeCommand);
 		} catch (Exception e) {
-			System.out.println("Error: Exception changing wallpaper. [[ Message: " + e.getMessage() + "]]");
+			System.out.println("\nError: Exception changing wallpaper. [[ Message: " + e.getMessage() + "]]\n");
 		}
 	}
 

@@ -3,6 +3,8 @@ dev/habibi/grw/Main.class
 dev/habibi/grw/DialogUI.class
 dev/habibi/grw/ConfigManager.class
 module-info.class
+dev/habibi/grw/DialogUI$1.class
+dev/habibi/grw/ConfigManager$1PathAlias.class
 dev/habibi/grw/CLIHandler.class
 dev/habibi/grw/Utility.class
 dev/habibi/grw/Parameters.class

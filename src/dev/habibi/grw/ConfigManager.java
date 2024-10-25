@@ -36,7 +36,7 @@ public class ConfigManager {
 
 		// Tenta carregar o conteúdo existente do arquivo YAML
 		Yaml yamlReader = new Yaml();
-		try (FileInputStream inputStream = new FileInputStream(Parameters.PATH_CONFIG_GRW_FILE_YAML_DEFAULT)) {
+		try (FileInputStream inputStream = new FileInputStream(Parameters.PATH_HOME_CONFIG_GRW_FILE_YAML_DEFAULT)) {
 			Map<String, Object> data = yamlReader.load(inputStream);
 
 			// Verifica se existe a chave "imgsDirAliasList" no arquivo YAML
@@ -65,7 +65,7 @@ public class ConfigManager {
 			Yaml yamlWriter = new Yaml(options);
 
 			// Escreve a lista modificada no arquivo YAML, sob a chave "imgsDirAliasList"
-			try (FileWriter writer = new FileWriter(Parameters.PATH_CONFIG_GRW_FILE_YAML_DEFAULT)) {
+			try (FileWriter writer = new FileWriter(Parameters.PATH_HOME_CONFIG_GRW_FILE_YAML_DEFAULT)) {
 				Map<String, Object> dataToWrite = new HashMap<>();
 				dataToWrite.put("imgsDirAliasList", serializableList);  // Atualiza ou cria a chave
 				yamlWriter.dump(dataToWrite, writer);
@@ -85,7 +85,7 @@ public class ConfigManager {
 
 		// Tenta carregar o conteúdo existente do arquivo YAML
 		Yaml yaml = new Yaml();
-		try (FileInputStream inputStream = new FileInputStream(Parameters.PATH_CONFIG_GRW_FILE_YAML_DEFAULT)) {
+		try (FileInputStream inputStream = new FileInputStream(Parameters.PATH_HOME_CONFIG_GRW_FILE_YAML_DEFAULT)) {
 			Map<String, Object> data = yaml.load(inputStream);
 
 			// Verifica se existe a chave "imgsDirAliasList" no arquivo YAML
@@ -114,7 +114,7 @@ public class ConfigManager {
 		Yaml yamlWriter = new Yaml(options);
 
 		// Escreve a lista modificada de volta no arquivo YAML
-		try (FileWriter writer = new FileWriter(Parameters.PATH_CONFIG_GRW_FILE_YAML_DEFAULT)) {
+		try (FileWriter writer = new FileWriter(Parameters.PATH_HOME_CONFIG_GRW_FILE_YAML_DEFAULT)) {
 			Map<String, Object> dataToWrite = new HashMap<>();
 			dataToWrite.put("imgsDirAliasList", serializableList);  // Atualiza a chave
 
@@ -127,32 +127,45 @@ public class ConfigManager {
 
 
 
-	private static boolean configFileExists() {
-		File configFile = new File(Parameters.PATH_CONFIG_GRW_FILE_YAML_DEFAULT);
-		return configFile.exists() && configFile.isFile();
-	}
-
-
-
-	/* It will create the path and file if the grw.yaml file does not exist in the default directory. */
+	/* It will create the dir-path and file if the grw.yaml file does not exist in the default directory. */
 	static boolean createDirFileConfigGrwIfNotExists() {
 		while (!configFileExists()) {
 			try {
-				File diretorioHomeConfig = new File(Parameters.PATH_HOME_CONFIG_DEFAULT);
-				if (!diretorioHomeConfig.exists() && !diretorioHomeConfig.mkdirs()) {
-					System.out.println("Warning: Failed to create configuration directory.");
-					return false;
+
+				/* Creating the base config dir: ex ~/.config . */
+				File homeConfigDir = new File(Parameters.PATH_HOME_CONFIG_DEFAULT);
+				if (!homeConfigDir.exists() && !homeConfigDir.mkdirs()) {
+					System.out.println("Warning: Failed to create configuration directory. Retring...");
+					boolean dirCreated = homeConfigDir.mkdirs();
+					if (dirCreated) {
+						System.out.println("Info: Base directoy of configuration created successfuly.");
+					} else {
+						System.out.println("Warning: Failed to create base configuration directory. Aborted!");
+						return false;
+					}
+
 				}
-				File diretorioConfigGrw = new File(Parameters.PATH_CONFIG_GRW_DEFAULT);
-				if (!diretorioConfigGrw.exists() && !diretorioConfigGrw.mkdirs()) {
-					System.out.println("Warning: Failed to create 'grw' directory.");
-					return false;
+
+				/* Creating the specific grw-config dir: ex ~/.config/grw . */
+				File configGrwDir = new File(Parameters.PATH_HOME_CONFIG_GRW_DEFAULT);
+				if (!configGrwDir.exists() && !configGrwDir.mkdirs()) {
+					System.out.println("Warning: Failed to create grw configuration directory. Retring...");
+					boolean dirCreated = configGrwDir.mkdirs();
+					if (dirCreated) {
+						System.out.println("Info: grw configuration directoy created successfuly.");
+					} else {
+						System.out.println("Warning: Failed to create the grw configuration directory. Aborted!");
+						return false;
+					}
 				}
-				File arquivo = new File(Parameters.PATH_CONFIG_GRW_FILE_YAML_DEFAULT);
+
+				/* Creating the specific grw.yaml file: ex ~/.config/grw/grw.yaml . */
+				File arquivo = new File(Parameters.PATH_HOME_CONFIG_GRW_FILE_YAML_DEFAULT);
 				if (!arquivo.createNewFile()) {
 					System.out.println("Warning: Failed to create configuration file [grw.yaml].");
 					return false;
 				}
+				
 			} catch (IOException e) {
 				System.out
 						.println("Error: Exception creating file or directory. [[ Message: " + e.getMessage() + " ]]");
@@ -164,10 +177,19 @@ public class ConfigManager {
 
 
 
+	private static boolean configFileExists() {
+		File configFile = new File(Parameters.PATH_HOME_CONFIG_GRW_FILE_YAML_DEFAULT);
+		return configFile.exists() && configFile.isFile();
+	}
+
+
+
 	static void writeConfigToFile(String key, String value) {
-		File yamlFile = new File(Parameters.PATH_CONFIG_GRW_FILE_YAML_DEFAULT);
+		File yamlFile = new File(Parameters.PATH_HOME_CONFIG_GRW_FILE_YAML_DEFAULT);
 		Map<String, Object> yamlData;
+		
 		if (yamlFile.exists()) {
+			/* Read the current file, at all, to keep the else configuration next the new one being written. */
 			try (FileInputStream inputStream = new FileInputStream(yamlFile)) {
 				Yaml yaml = new Yaml();
 				yamlData = yaml.load(inputStream);
@@ -182,11 +204,13 @@ public class ConfigManager {
 		} else {
 			yamlData = new HashMap<>();
 		}
+		
 		yamlData.put(key, value);
 		DumperOptions options = new DumperOptions();
 		options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
 		options.setPrettyFlow(true);
-		try (FileWriter writer = new FileWriter(Parameters.PATH_CONFIG_GRW_FILE_YAML_DEFAULT)) {
+		
+		try (FileWriter writer = new FileWriter(Parameters.PATH_HOME_CONFIG_GRW_FILE_YAML_DEFAULT)) {
 			Yaml yaml = new Yaml(options);
 			yaml.dump(yamlData, writer);
 		} catch (IOException e) {
@@ -232,8 +256,10 @@ public class ConfigManager {
 	static void setConfigFromDefaultValues() {
 		ConfigManager.waitingTime = Parameters.TIME_DEFAULT;
 		writeConfigToFile("waitingTime", String.valueOf(ConfigManager.waitingTime));
+		
 		ConfigManager.imagesDirectory = Parameters.IMAGES_DIR_DEFAULT;
 		writeConfigToFile("imagesDirectory", ConfigManager.imagesDirectory);
+		
 		System.out.println("Info: Waiting time and images directory settings have been set to default value.");
 		DialogUI.showStatus();
 	}
@@ -241,7 +267,7 @@ public class ConfigManager {
 
 
 	static Map<String, Object> readKeyValueYamlFromFile() {
-		File yamlFile = new File(Parameters.PATH_CONFIG_GRW_FILE_YAML_DEFAULT);
+		File yamlFile = new File(Parameters.PATH_HOME_CONFIG_GRW_FILE_YAML_DEFAULT);
 		if (yamlFile.exists()) {
 			try (FileInputStream inputStream = new FileInputStream(yamlFile)) {
 				Yaml yaml = new Yaml();
@@ -261,6 +287,7 @@ public class ConfigManager {
 
 	static void readConfigurationFormFile() {
 		Map<String, Object> configYaml = ConfigManager.readKeyValueYamlFromFile();
+		
 		if (configYaml.containsKey("waitingTime")) {
 			ConfigManager.waitingTime = Integer.parseInt(configYaml.get("waitingTime").toString());
 		}
@@ -270,12 +297,12 @@ public class ConfigManager {
 		if (configYaml.containsKey("running")) {
 			ConfigManager.running = configYaml.get("running").toString().equals("true");
 		}
-		// Verifica se a chave "imgsDirAliasList" existe no configYaml
-		if (configYaml.containsKey("imgsDirAliasList")) {
+		//FURTHER: Verifica se a chave "imgsDirAliasList" existe no configYaml
+		/*if (configYaml.containsKey("imgsDirAliasList")) {
 			ConfigManager.imgsDirAliasList = readImgsDirAliasList(configYaml);
 		} else { //FURTHER: remove this ELSE.
 			System.out.println("The key 'imgsDirAliasList' wass not found in the config file.");
-		}
+		}*/
 	}
 
 
