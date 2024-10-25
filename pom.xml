@@ -6,7 +6,7 @@
 
 	<groupId>dev.habibi</groupId>
 	<artifactId>grw</artifactId>
-	<version>0.7.1-snapshot</version>
+	<version>0.7.1-dev</version>
 
 	<dependencies>
 		<dependency>

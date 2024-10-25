@@ -15,8 +15,8 @@ public class Parameters {
 	static final String PROJECT_VERSION_MAJOR = "0";
 	static final String PROJECT_VERSION_MINOR = "7";
 	static final String PROJECT_VERSION_PATCH = "1";
-	static final String PROJECT_VERSION_DESCR = "snapshot";
-	static final String PROJECT_VERSION_BUILD = "202410240520";
+	static final String PROJECT_VERSION_DESCR = "dev";
+	static final String PROJECT_VERSION_BUILD = "202410251309";
 	static final String PROJECT_VERSION = PROJECT_VERSION_MAJOR + "." + PROJECT_VERSION_MINOR + "."
 			+ PROJECT_VERSION_PATCH + "-" + PROJECT_VERSION_DESCR + "-" + PROJECT_VERSION_BUILD;
 	static final String PROJECT_NAME = "Gnome Randomic Wallpaper";
