@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name[en_US]=grw.desktop
+Name=grw.desktop
+Comment[en_US]=Gnome Randomic Wallpaper
+Comment=Gnome Randomic Wallpaper
+Exec=java -jar /usr/local/bin/grw-0.7.1-dev.jar -a &
+X-GNOME-Autostart-enabled=true
+
