@@ -12,7 +12,6 @@ import org.yaml.snakeyaml.error.YAMLException;
 
 
 
-
 public class ConfigManager {
 
 	static int waitingTime;
@@ -20,49 +19,46 @@ public class ConfigManager {
 	static boolean running;
 
 
-
 	private static boolean configFileExists() {
-		File configFile = new File(Parameters.PATH_CONFIG_GRW_FILE_YAML_DEFAULT);
+		File configFile = new File(Parameters.PATH_HOME_CONFIG_GRW_FILE_YAML_DEFAULT);
 		return configFile.exists() && configFile.isFile();
 	}
 
 
-
 	/* It will create the path and file if the grw.yaml file does not exist in the default directory. */
-	static boolean createDirFileConfigGrwIfNotExists() {
+	static void createDirFileConfigIfNotExists() {
 		while (!configFileExists()) {
 			try {
 				File diretorioHomeConfig = new File(Parameters.PATH_HOME_CONFIG_DEFAULT);
 				if (!diretorioHomeConfig.exists() && !diretorioHomeConfig.mkdirs()) {
 					System.out.println("Warning: Failed to create configuration directory.");
-					return false;
+					//return false;
 				}
 
-				File diretorioConfigGrw = new File(Parameters.PATH_CONFIG_GRW_DEFAULT);
+				File diretorioConfigGrw = new File(Parameters.PATH_HOME_CONFIG_GRW_DEFAULT);
 				if (!diretorioConfigGrw.exists() && !diretorioConfigGrw.mkdirs()) {
 					System.out.println("Warning: Failed to create 'grw' directory.");
-					return false;
+					//return false;
 				}
 
-				File arquivo = new File(Parameters.PATH_CONFIG_GRW_FILE_YAML_DEFAULT);
+				File arquivo = new File(Parameters.PATH_HOME_CONFIG_GRW_FILE_YAML_DEFAULT);
 				if (!arquivo.createNewFile()) {
 					System.out.println("Warning: Failed to create configuration file [grw.yaml].");
-					return false;
+					//return false;
 				}
 
 			} catch (IOException e) {
 				System.out
 						.println("Error: Exception creating file or directory. [[ Message: " + e.getMessage() + " ]]");
-				return false;
+				//return false;
 			}
 		}
-		return true;
+		//return true;
 	}
 
 
-
 	static void writeConfigToFile(String key, String value) {
-		File yamlFile = new File(Parameters.PATH_CONFIG_GRW_FILE_YAML_DEFAULT);
+		File yamlFile = new File(Parameters.PATH_HOME_CONFIG_GRW_FILE_YAML_DEFAULT);
 		Map<String, Object> yamlData;
 
 		if (yamlFile.exists()) {
@@ -87,7 +83,7 @@ public class ConfigManager {
 		options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
 		options.setPrettyFlow(true);
 
-		try (FileWriter writer = new FileWriter(Parameters.PATH_CONFIG_GRW_FILE_YAML_DEFAULT)) {
+		try (FileWriter writer = new FileWriter(Parameters.PATH_HOME_CONFIG_GRW_FILE_YAML_DEFAULT)) {
 			Yaml yaml = new Yaml(options);
 			yaml.dump(yamlData, writer);
 		} catch (IOException e) {
@@ -95,7 +91,6 @@ public class ConfigManager {
 					"Error: Exception writing configuration file [grw.yaml]. [[ Message: " + e.getMessage() + " ]]");
 		}
 	}
-
 
 
 	static void setImageDiretory(String imagesDirectory) {
@@ -110,7 +105,6 @@ public class ConfigManager {
 			System.out.println("Info: The images directory has been set [ " + imagesDirectory + " ].");
 		}
 	}
-
 
 
 	static void setWaitingTime(String time) {
@@ -131,7 +125,6 @@ public class ConfigManager {
 	}
 
 
-
 	static void setConfigFromDefaultValues() {
 		ConfigManager.waitingTime = Parameters.TIME_DEFAULT;
 		writeConfigToFile("waitingTime", String.valueOf(ConfigManager.waitingTime));
@@ -140,7 +133,6 @@ public class ConfigManager {
 		System.out.println("Info: Waiting time and images directory settings have been set to default value.");
 		DialogUI.showStatus();
 	}
-
 
 
 	static void readConfigurationFormFile() {
@@ -158,21 +150,21 @@ public class ConfigManager {
 	}
 
 
-
 	static Map<String, Object> readKeyValueYamlFromFile() {
-		File yamlFile = new File(Parameters.PATH_CONFIG_GRW_FILE_YAML_DEFAULT);
+		File yamlFile = new File(Parameters.PATH_HOME_CONFIG_GRW_FILE_YAML_DEFAULT);
 
 		if (yamlFile.exists()) {
 			try (FileInputStream inputStream = new FileInputStream(yamlFile)) {
 				Yaml yaml = new Yaml();
 				return yaml.load(inputStream);
 			} catch (IOException e) {
-				System.out.println(
-						"Error: Exception reading key-value pairs from configuration file [grw.yaml]. [[ Message: "
-								+ e.getMessage() + " ]]");
+				System.out.println("Error: Exception reading key-value pairs from configuration file ["
+						+ Parameters.PATH_HOME_CONFIG_GRW_FILE_YAML_DEFAULT + "]. [[ Message: " + e.getMessage()
+						+ " ]]");
 			}
 		} else {
-			System.out.println("Warning: Configuration file [grw.yaml] not found.");
+			System.out.println("Warning: Configuration file [" + Parameters.PATH_HOME_CONFIG_GRW_FILE_YAML_DEFAULT
+					+ "] not found.");
 		}
 		return new HashMap<>();
 	}

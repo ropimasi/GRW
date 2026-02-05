@@ -1,12 +1,12 @@
 package dev.ropimasi.grw;
 
 public class DialogUI {
-	
+
 	/* FURTHER: UMA CLASSE PARA AS CONSTANTES DE MENSAGENS COM U.I. */
 	static final String INF_ = "0";
 	static final String WRN_ = "0";
 	static final String ERR_ = "0";
-	
+
 
 	static void showVersion() {
 		System.out.println("\n");
@@ -32,6 +32,7 @@ public class DialogUI {
 		System.out.println("\t-f \t\t\t Sets default values for waiting time and images directory configuration.");
 		System.out.println("\n");
 	}
+
 
 	public static void showStatus() {
 		ConfigManager.readConfigurationFormFile();

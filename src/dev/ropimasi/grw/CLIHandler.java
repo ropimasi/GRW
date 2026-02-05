@@ -8,13 +8,11 @@ public class CLIHandler {
 			return;
 		}
 
-		ConfigManager.createDirFileConfigGrwIfNotExists();
-
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
 			case "-t":
-				if (i + 1 < args.length) {
-					ConfigManager.setWaitingTime(args[++i]);
+				if (i + 1 < args.length) { // If there is a next argument.
+					ConfigManager.setWaitingTime(args[++i]); // Increment i to skip the next argument as it has been processed.
 				} else {
 					System.out.println("Error: The -t option requires a waiting time value.");
 					return;
@@ -22,9 +20,8 @@ public class CLIHandler {
 				break;
 
 			case "-d":
-				if (i + 1 < args.length) {
-					ConfigManager.setImageDiretory(args[++i]);
-
+				if (i + 1 < args.length) { // If there is a next argument.
+					ConfigManager.setImageDiretory(args[++i]); // Increment i to skip the next argument as it has been processed.
 				} else {
 					System.out.println("Error: The -d option requires a path to the images directory.");
 					return;

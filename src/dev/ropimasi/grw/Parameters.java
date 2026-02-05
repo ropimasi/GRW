@@ -8,8 +8,8 @@ public class Parameters {
 	static final boolean RUNNING_DEFAULT = false;
 
 	static final String PATH_HOME_CONFIG_DEFAULT = System.getProperty("user.home") + "/.config";
-	static final String PATH_CONFIG_GRW_DEFAULT = PATH_HOME_CONFIG_DEFAULT + "/grw";
-	static final String PATH_CONFIG_GRW_FILE_YAML_DEFAULT = PATH_CONFIG_GRW_DEFAULT + "/grw.yaml";
+	static final String PATH_HOME_CONFIG_GRW_DEFAULT = PATH_HOME_CONFIG_DEFAULT + "/grw";
+	static final String PATH_HOME_CONFIG_GRW_FILE_YAML_DEFAULT = PATH_HOME_CONFIG_GRW_DEFAULT + "/grw.yaml";
 
 	static final String PROJECT_VERSION_MAJOR = "0";
 	static final String PROJECT_VERSION_MINOR = "6";

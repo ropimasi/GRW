@@ -9,8 +9,7 @@ _(dev.ropimasi.grw)_
 ## LIST OF CONTENTS
 * [Attention: Rights, License and Disclaimer](#attention-rights)
 * [Description](#description)
-* [Description - Screenshots](description-screenshots)
-* [Techniques Used](techniques)
+* [Description - Screenshots](#description-screenshots)
 * [Versioning Guideline](#versioning)
 * [Features](#features)
 * [Instructions](#instructions)
@@ -54,14 +53,6 @@ _(dev.ropimasi.grw)_
 ##### Desktop:  
 ![Changing Desktop](resource/img/GRW-Screenshot-2.png)
 ![Changing Desktop](resource/img/GRW-Screenshot-3.png)
-
-&nbsp;  
-&nbsp;  
-&nbsp;  
-
-<a name="techniques"></a>
-## TECHNIQUES USED
-// TO DO...  
 
 &nbsp;  
 &nbsp;  
@@ -144,7 +135,7 @@ Thus, this project uses **_SemVer_** for its versioning. **_SemVer_** is a speci
 &nbsp;  
 
 ### Usage
-// TO DO...
+//TODO:
 
 &nbsp;  
 &nbsp;  
@@ -152,7 +143,7 @@ Thus, this project uses **_SemVer_** for its versioning. **_SemVer_** is a speci
 
 <a name="author"></a>
 ## Att. Ronaldo Silva.
-##### | [https://ropimasi.dev](https://ropimasi.dev) | [linkedin @ropimasi](https://linkedin.com/in/ropimasi/) | [x (twitter) @ropimasi](https://x.com/ropimasi/) | [instagram @ropimasi](https://instagram.com/ropimasi/) | [ropimasi@email.com](mailto://ropimasi@email.com) |  
+##### | [https://ropimasi.github.io](https://ropimasi.github.io) | [linkedin @ropimasi](https://linkedin.com/in/ropimasi/) | [x (twitter) @ropimasi](https://x.com/ropimasi/) | [instagram @ropimasi](https://instagram.com/ropimasi/) | [ropimasi@email.com](mailto://ropimasi@email.com) |  
 
 &nbsp;  
 &nbsp;  
