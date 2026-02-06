@@ -92,7 +92,7 @@ Thus, this project uses **_SemVer_** for its versioning. **_SemVer_** is a speci
 
 <a name="features"></a>
 ## FEATURES
-### Features in current version (0.6.2)
+### Features in current version (0.6.3)
   + Prints syntax and brief option help to the screen;
   + Prints the current version of _*GRW*_ to the screen;
   + Prints the current status of the configuration set to the screen;

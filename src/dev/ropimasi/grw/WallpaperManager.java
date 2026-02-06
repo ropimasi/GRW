@@ -26,6 +26,7 @@ public class WallpaperManager {
 
 			ConfigManager.readConfigurationFormFile();
 		}
+		
 		System.out.println("Info: Wallpaper change has been stoped!");
 		System.exit(0);
 	}
@@ -34,8 +35,8 @@ public class WallpaperManager {
 	static void stopLoop() {
 		ConfigManager.running = false;
 		ConfigManager.writeConfigToFile("running", "false");
-		System.out.println("Info: Stopping wallpaper change...");
-		//System.exit(0);
+		System.out.println("Info: Wallpaper changes stoped.");
+		System.exit(0);
 	}
 
 

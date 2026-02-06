@@ -4,7 +4,7 @@
   <groupId>dev.ropimasi</groupId>
   <artifactId>grw</artifactId>
   <name>Gnome Randomic Wallpaper</name>
-  <version>0.6.2-alpha-202503101318</version>
+  <version>0.6.3-dev-202602061908</version>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <resources>
