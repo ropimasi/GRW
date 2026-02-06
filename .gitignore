@@ -1,0 +1,33 @@
+# --- Build Artifacts (Obrigatório) ---
+target/
+bin/
+build/
+out/
+*.class
+*.war
+*.ear
+*.jar
+
+# --- Eclipse Specific (Recomendado ignorar para evitar conflitos em equipe) ---
+.settings/
+.classpath
+.project
+.factorypath
+.metadata/
+*.launch
+
+# --- Logs e Arquivos Temporários ---
+*.log
+/logs/
+temp/
+tmp/
+
+# --- Configurações de Sistema (Windows / macOS) ---
+Thumbs.db
+.DS_Store
+
+# --- IDEs Adicionais (Caso abra o projeto no VS Code ou IntelliJ futuramente) ---
+.vscode/
+.idea/
+*.iml
+*.iws
