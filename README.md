@@ -35,7 +35,6 @@ _(dev.ropimasi.grw)_
 ## DESCRIPTION
 * SUBJECT: Java application to change the wallpaper of Gnome Desktop Environment;
 * PROJECT NAME: **GRW**;
-* LIBRARY NAME: **---**;
 * WHAT IS: **GRW** is a small software aims to change the wallpaper image of Gnome Desktop randomly. Developed for Linux with Gnome Desktop Environment. More information about versions and compatibility can be found below;
 * TO WIT: The **GRW** and its resources are a project sample, which I have developing to demonstrate some of my abilities. The **GRW** project belongs to my personal portfolio. Its detailed project can be followed just here on GitHub: [github.com/users/ROPIMASI/projects/](https://github.com/users/ROPIMASI/projects/). It is also found on my web-portfolio: [ropimasi.dev/portfolio](https://ropimasi.dev/portfolio).  
 
@@ -95,19 +94,19 @@ Thus, this project uses **_SemVer_** for its versioning. **_SemVer_** is a speci
 ## FEATURES
 ### Features in current version (0.6.2)
   + Prints syntax and brief option help to the screen;
-  + Prints the current version of _*grw*_ to the screen;
+  + Prints the current version of _*GRW*_ to the screen;
   + Prints the current status of the configuration set to the screen;
   + Sets the timeout for automatically changing the wallpaper;
   + Sets a directory as the image directory;
   + Starts the infinite loop for image changing;
   + Stops the infinite loop for image changing;  
-  + Sets the default value for waiting time and images directory configuration;
+  + Recover the default value for waiting time and images directory configuration;
 
 &nbsp;  
 
 ### Features in target release version (1.0.0)
   + Sets all configurations as default value;
-  + Handle 'n' different image directories along their aliases;
+  + Use 'n' different image directories along their aliases;
 
 &nbsp;  
 &nbsp;  
@@ -118,8 +117,8 @@ Thus, this project uses **_SemVer_** for its versioning. **_SemVer_** is a speci
 ### Instalation
 * Put the _APP_ file (`grw-x.y.z.jar`) in directory `/usr/local/bin/` (example: `/usr/local/bin/grw-x.y.z.jar`;  
 * Create the auto start file `grw.desktop` in `/home/.config/autostart/` (example: `/home/.config/autostart/grw.desktop`). See the file content below;  
-* The GRW config file `grw.yaml` will be created by the _APP_ in `/home/.config/grw/grw.yaml`;  
-* A GRW images folder `/home/my-wallpapers/` will be created by the _APP_ in `/home/`;  
+* The GRW config file `grw.yaml` will be created automaticly by the _APP_ in `/home/.config/grw/grw.yaml`;  
+* A GRW images folder `/home/my-wallpapers/` will be created automaticly by the _APP_ in `/home/`;  
 
 > **`grw.desktop` file content:**  
 >  
